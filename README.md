@@ -92,8 +92,8 @@ By following these steps, you’ll create a secure CI/CD pipeline that not only 
 ################################################################
 
  SOLUTION:
- 1-  install jenkkinss on  my server
- 	step 1:: upddatee system pacckages
+ 1-  install jenkins on  my server
+ step 1: update system packages
  	*sudo apt update
  	*sudo apt upgrade -y
  	
@@ -168,20 +168,20 @@ sudo apt install jenkins -y
    	* Check Jenkins to see if a new build has been triggered
    	* Review the build logs in jenkins to ensure the build completed successfully
    	
-   With these step, i have set up a cicd pipeline in jenkins that automatecally builds on each code push to my github repository.
+   With these step, i have set up a cicd pipeline in jenkins that automatically builds on each code push to my github repository.
    
    II- Integrate Static application security Testing(SAST)
-   *GOAL*: Detect vulnerability in the code before it is compiled or deployed by using static code analysis.
+   GOAL: Detect vulnerability in the code before it is compiled or deployed by using static code analysis.
    
     1: Install Sonarqube for static code Analysis
-    	* Goal: install Sonarqube and set it up to analyse code for vulnerabilities and quality issues.
+    	 Goal: install Sonarqube and set it up to analyse code for vulnerabilities and quality issues.
     	
-    	* Steps:
+    	 Steps:
     		1- Set up SonarQube:
     			* Download and install SonarQube on a server(local machine or cloud).
     		- How to install SonarQube?
     	prerequisites:
-    I need a virtual machine running Ubunut 22.04 or newer
+    I need a virtual machine running Ubuntu 22.04 or newer
     * Install Postgresql 15
     sudo apt update
 sudo apt upgrade
@@ -198,7 +198,7 @@ sudo systemctl enable postgresql
 sudo passwd postgres
 su - postgres
 
-createuser sonar
+create user sonar
 psql 
 ALTER USER sonar WITH ENCRYPTED password 'sonar';
 CREATE DATABASE sonarqube OWNER sonar;
@@ -252,7 +252,7 @@ sudo groupadd sonar
 sudo useradd -c "user to run SonarQube" -d /opt/sonarqube -g sonar sonar
 sudo chown sonar:sonar /opt/sonarqube -R
 
- Update SonarQube properties with DB credetials
+ Update SonarQube properties with DB credentials
   sudo vim /opt/sonarqube/conf/sonar.properties
   
   Find and replace the below values, i might need to add the sonar.jdbc.url
@@ -298,14 +298,14 @@ WantedBy=multi-user.target
  
  2 - COnfigure Sonarqube
  
- 	* log in with credetials (admin/admin) and change the password
+ 	* log in with credentials (admin/admin) and change the password
  	* Create a new project in SonarQube for my application
  	
- 	* Generate a prjet token for authentication. I will need this token to integrate SonarQube with jenkins
+ 	* Generate a projet token for authentication. I will need this token to integrate SonarQube with jenkins
  	
  	
  3 - Integrate SOnarQube with Jenkins
- 	* Goal: Set up sonarqube as part of my jenkins CI/CD pipeline.
+ 	Goal: Set up sonarqube as part of my jenkins CI/CD pipeline.
  	step: 
  		1- install sonarqube scanner plugin in jenkins:
  		* Go to manage jenkins > manage plugin
@@ -324,13 +324,13 @@ WantedBy=multi-user.target
    
    
   4- Add SonarQube Analysis to my CI/CD pipeline
-  	* Goal: Configure my jenkins pipeline to trigger SonarQube analysis on each commit or pull request.
+  	 Goal: Configure my jenkins pipeline to trigger SonarQube analysis on each commit or pull request.
   	
   	Steps:
   	
   	1- Modify Jenkinsfile to include SonarQube stage :
   	  * In my project's jenkinsfile, i add a stage for SonarQUbe analysis
-  	  This runs a statiic aanalysis on the codebase after the build stage.
+  	  This runs a static analysis on the codebase after the build stage.
   	
   pipeline {
     agent any
@@ -363,9 +363,9 @@ WantedBy=multi-user.target
 	  2- Trigger the pipeline:
 	   * Each time code is committed, jenkins will automatically trigger a build, followed by SonarQUbe analysis to identify potential issues.
 	   
-	   4-- Review SonarQube findings
-   - GOAL: Detect and address vulnerabilities before deployment.
-   * steps:
+	   4- Review SonarQube findings
+    GOAL: Detect and address vulnerabilities before deployment.
+    steps:
       1- View Analysis Results:
       -> Go to SonarQube, open my project, and review the issues tab for security vulnerabilities, code smells, and bugs.
       
@@ -376,7 +376,7 @@ WantedBy=multi-user.target
       -> I ensure that identified issues are addressed by my development team and re-scan the code to verify fixes.
       
       III- Add Dynamic Application Security Testing (DAST)
-      -GOAL: Simulate real-world attacks on a running application to identify vulnerabilities from an external attacker's perpective.
+GOAL: Simulate real-world attacks on a running application to identify vulnerabilities from an external attacker's perpective.
       
       Overview of key steps:
  1- Deploy OWASP ZAP in Docker for easy setup and consistency accross environments.
@@ -390,7 +390,7 @@ Using  Docker for owasp zap simplifies setup and ensures that my scans are consi
 sudo apt update
 sudo apt install docker.io -y
 
-	"2- Run OWASP ZAP Docker Container: Pull and run the ZAP Docker image to perform a full scan of my application. This will create an HTML report of vulnerability
+	2- Run OWASP ZAP Docker Container: Pull and run the ZAP Docker image to perform a full scan of my application. This will create an HTML report of vulnerability
 	
 	-> docker pull owasp/zap2docker-stable or docker pull owasp/2zapdocker-weekly 
 	
@@ -399,7 +399,7 @@ Once the image is pulled, i can run it as before.
 
 docker run -v $(pwd):/zap/wrk -t owasp/zap2docker-weekly zap"-full-scan.py -t TARGET_URL -r zap_report.html
 
- 3- Run the ZAP scan: Adjust the target URL to macth my application's test or staging envrionment URL. Replace TARGET_URL with my application's URL:
+ 3- Run the ZAP scan: Adjust the target URL to match my application's test or staging environment URL. Replace TARGET_URL with my application's URL:
  
  -> docker run -v $(pwd): /zap/wrk -t owasp/zap2docker-weekly zap-full-scan.py -t TARGET_URL -r zap_report.html
  
@@ -472,9 +472,9 @@ docker run -v $(pwd):/zap/wrk -t owasp/zap2docker-weekly zap"-full-scan.py -t TA
  3- Result archival:
  	* Archive the zap_report.html in jenkins to store scan with result with each pipeline run. This way, report are always accessible and can be reviewd for future reference.
  	
- 4- Set up Alert for Critical vulnerabiliies (optional but recommended):
+ 4- Set up Alert for Critical vulnerabilities (optional but recommended):
  
- GOAT: Setting up alerts for critical vulnerabilities after an owasp zap scan is a smart way to ensure that only secure code proceeds to production.Here's i=step-by step approach using zap-cli (an unofficial CLI for oaws zap) to parse and evaluate the zap scan results:
+ Goal: Setting up alerts for critical vulnerabilities after an owasp zap scan is a smart way to ensure that only secure code proceeds to production.Here's a step-by step approach using zap-cli (an unofficial CLI for owasp zap) to parse and evaluate the zap scan results:
  
  step 1- Install zap-cli
  -> if zap-cli is not already installed, i can install it using pip. Ensure pip is installed on my system, and then run:
@@ -486,14 +486,14 @@ docker run -v $(pwd):/zap/wrk -t owasp/zap2docker-weekly zap"-full-scan.py -t TA
  
  Replace TARGET_URL with the URL of my application. ThiS command will generate a JSON report name zap_report.json in the current directory.
  
- step 3: Parse and Evaluate the Report wwith zap-cli
+ step 3: Parse and Evaluate the Report with zap-cli
  
  After the scan completes, use zap-cli to parse the report and trigger alerts based on the severity of the vulnerabilities found.
  	1* start zap Daemon mode
  First, start zap in daemon mode if am not already running it:
  -> docker run -u zap -p 8080:8080 -i owasp/zap2docker-weekly zap.sh -daemon -host 0.0.0.0 -port 8080
  
- 	2* Run zap-cli Against the scan Results i can then set up zap-cli to analyse the results. I configure it to fail based on vulnerabilities severity (e.g., failing on any vulnerabilities at nedium or higher severity):
+ 	2* Run zap-cli Against the scan Results i can then set up zap-cli to analyse the results. I configure it to fail based on vulnerabilities severity (e.g., failing on any vulnerabilities at medium or higher severity):
  	
  	zap-cli --zap-url http://localhost --port 8080 quick-scan --self-contained TARGET_URL
 zap-cli --zap-url http://localhost --port 8080 report -o zap_report.json
@@ -528,7 +528,7 @@ fi
  Step 5: Set Up Alerts
  I can integrate with notification systems like slack, Teams, or email for critical vulnerabilities by sending an alert if the script exits with a non-zero status.
  
- Here's is a step-by-step guide to setting up SLACK notification in this conttext, but similar principles apply to other platform as well.
+ Here's is a step-by-step guide to setting up SLACK notification in this context, but similar principles apply to other platform as well.
  
  -> Prerequisites for Slack Alerts
  1- Create a Slack Webhook URL:
@@ -539,7 +539,7 @@ fi
  
  1- Add Slack Webhook URL to CI/cd Environment variables:
  
- * Store the Slack webkhook URL securely in my CI/CD tool(jenkins) as an environment variable named SLACK_WEBHOOK_URL for easy reference.
+ * Store the Slack webhook URL securely in my CI/CD tool(jenkins) as an environment variable named SLACK_WEBHOOK_URL for easy reference.
  
  2- Modify my pipeline script to send Alerts on Failure:
  
@@ -571,13 +571,13 @@ else
 fi
 
 Explanation of the script
-   * Send_slack_alert(): A function that posts a message to my slack hcannel via the webhook URL.
-   * CRITICAL_VULNERABILITIES Chceck: if the script finds any critical vulnerabilities, it calls send_slack_alert to post a message to Slack, then exits with status 1 to fail the pipeline.
+   * Send_slack_alert(): A function that posts a message to my slack channel via the webhook URL.
+   * CRITICAL_VULNERABILITIES Check: if the script finds any critical vulnerabilities, it calls send_slack_alert to post a message to Slack, then exits with status 1 to fail the pipeline.
    
    * Exit status: The Script exits with a non-zero status if vulnerabilities are found, wich will mark the CI/CD pipeline as failed.
    
    Example Slack Message Customization:
- To add more detail in the Salck message, customize the send_slack_alert function like this:
+ To add more detail in the Slack message, customize the send_slack_alert function like this:
  send_slack_alert() {
     curl -X POST -H 'Content-type: application/json' \
     --data "{\"text\":\"Critical vulnerabilities detected in OWASP ZAP scan for *Project Name* on *$(date)*.\nPipeline has been stopped. Immediate action is required.\"}" \
@@ -586,7 +586,7 @@ Explanation of the script
 
 Using Other Notification systems:
 
-If i want to use email or other notification tools, i replace the send_slack_alert function with an appropriate command or API call for the chosen system, such as sendmail for email or webhooURL for Teams.
+If i want to use email or other notification tools, i replace the send_slack_alert function with an appropriate command or API call for the chosen system, such as sendmail for email or webhook URL for Teams.
  
  
  This set up will ensure that my pipeline only passes if no critical vulnerabilities are found, adding an extra layer of security to deployment process.
@@ -595,10 +595,10 @@ If i want to use email or other notification tools, i replace the send_slack_ale
   IV: IMPLEMENT CONTAINER IMAGE SCANNING
   GOAL: Ensure that container images are free from known vulnerabilities before they are deployed.
   
- I am going to use TRIVY ic my CI/CD pipeline.
+ I am going to use TRIVY in my CI/CD pipeline.
  
  PREREQUISITES:
- - Docker: Ensure Dcker is installed on the server or local machine running my CI/CD pipeline.
+ - Docker: Ensure Docker is installed on the server or local machine running my CI/CD pipeline.
  - Trivy: Install Trivy, an open-source vulnerability scanner for Docker images. I can install Trivy either as a standalone binary or within a Docker conTainer.
  
   Step 1: Install Trivy
@@ -618,7 +618,7 @@ If i want to run Trivy within a Docker container:
 
 step 2: Add Trivy scanning to the CI/CD
 
-Integrate Trivy into my ci.cd pipeline by creeating aa stage that scans my Docker imagee  after it's built.
+Integrate Trivy into my ci.cd pipeline by creating a stage that scans my Docker image  after it's built.
 
 Example CI/CD Configuration
 
@@ -672,7 +672,7 @@ Explanation of the Jenkinsfile:
  * Trivy scan: Run Trivy on the built Docker image with the following options:
  
  	# --exit-code: if any high or critical vulnerabilities are found, trivy will exit with code  1, which will fail the jenkins stage.
- 	# --severity HIGH,CRITCICAL: Only report vulnerabilities with a severity of HIGH OR CRITICAL.
+ 	# --severity HIGH,CRITICAL: Only report vulnerabilities with a severity of HIGH OR CRITICAL.
  	
  * Failure Action: If the trivy scan fails(meaning vulnerabilities were found), the pipeline will mark the build as failed, allowing the team to address the issues before proceeding.
  
@@ -699,7 +699,7 @@ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
   This command will save the report in JSON format to trivy-report.json f or easier review and archiving
   
   
-  Optional: ADD Notification for Vulnerabilies
+  Optional: ADD Notification for Vulnerabilities
   If vulnerabilities are found, consider adding a notification step to alert the via Slack, email, or other communication tools.
   
   Example Slack notification (assuming webhook URL is set in my environment):
@@ -713,7 +713,7 @@ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
     }
 }
 
-By following these steps, i ensure that my DOcker images are scanned for vulnerabilities during the CI/CD process, enabling prompt detection and resolution of critical issues before deployment.
+By following these steps, i ensure that my Docker images are scanned for vulnerabilities during the CI/CD process, enabling prompt detection and resolution of critical issues before deployment.
 
   VI: Automate Secret Scanning.
   Goal: Detect and prevent accidental exposure of secrets (API Keys, passwords) in my code repository.
@@ -737,9 +737,9 @@ By following these steps, i ensure that my DOcker images are scanned for vulnera
       
       pip install trufflehog
       
-   2- Test Trrufflehog on my repository:
+   2- Test Trufflehog on my repository:
    
-   Run the follwoing command to test Trufflehog on my codebase locally:
+   Run the following command to test Trufflehog on my codebase locally:
    
    -> trufflehog filesystem --directory=.
  This will scan the current directory for secrets. I can change -- directory to target other paths.
@@ -748,10 +748,10 @@ By following these steps, i ensure that my DOcker images are scanned for vulnera
  
  1- Create a Gitguardian Account: Go to GitGuardian's website and sign up if i haven't already.
  
- 2- ObTAIN AN api KEY: iN MY GItguardian dasboard, navigate to settings > API Key and create an API Key. I will use this key to integrate GitBuardian with my CI/CD pipeline.
+ 2- ObTAIN AN api KEY: iN MY GItguardian dasboard, navigate to settings > API Key and create an API Key. I will use this key to integrate GitGuardian with my CI/CD pipeline.
  
  
-  Step 3: INtegrate Secret scanning into the CI/CD pipeline
+  Step 3: Integrate Secret scanning into the CI/CD pipeline
   
   Add a stage to my CI/CD pipeline configuration file(e.g., jenkinsfile, .gitlab-ci.yml, or github-action.yml) to automatically scan for secrets.
   
@@ -856,11 +856,11 @@ Note: In Github action, store GITGUARDIAN_API_KEY in setting > Secrets of the Gi
    
    
    1. Setting Up the Trigger in GitHub Actions
-For GitHub Actions, you can configure your pipeline to trigger secret scanning on every commit or pull request by using events in your workflow file.
+For GitHub Actions, i can configure my pipeline to trigger secret scanning on every commit or pull request by using events in my workflow file.
 
 	* Create or edit the GitHub Actions workflow file:
 
-Go to your repository on GitHub, then navigate to .github/workflows.
+Go to my repository on GitHub, then navigate to .github/workflows.
 If there isn’t a workflow file yet, create a new file (e.g., secret-scan.yml).
 Define the Trigger Events:
 
@@ -898,13 +898,13 @@ jobs:
    To set jenkins to run the secret scanning stage on each commit or pull request:
    
    * Install PLugin for Git integration:
-   -> Go to Manage jenkins > Manage plugins, and install plugind like Github integration or BItbucket integration to link my repository with Jenkins.
+   -> Go to Manage jenkins > Manage plugins, and install plugin like Github integration or BItbucket integration to link my repository with Jenkins.
    
    2- Create a NEW pipeline job:
    - In Jenkins, create a new pipeline job.
    - Link this job to my repositoy in the job setting (under source code management), and specify branch triggers.
    
-   3- COnfigure BUild triggers:
+   3- COnfigure Build triggers:
    
    - In the job configuration, scroll down to build triggers.
    - Enable Github hook trigger for GITScm polling to allow jenkins to trigger a build on each push.
@@ -1210,7 +1210,7 @@ GitLab CI/CD also logs all pipeline activity, which is accessible in the CI/CD >
 I can use the GitLab API to export logs or integrate with external logging solutions by pushing logs to an ELK stack or another centralized logging system.
 
 
-By following these steps, my CI/CD pipeline is fully equiped to notify stakeholder of critical vulnerabilities and maintain a secure audit trail for continuous security and compliance. tHIS SETUP improve improve awareness, minimizes risks, and enables rapid response to security issues.
+By following these steps, my CI/CD pipeline is fully equiped to notify stakeholder of critical vulnerabilities and maintain a secure audit trail for continuous security and compliance. tHIS SETUP improve awareness, minimizes risks, and enables rapid response to security issues.
 
 
 VIII: TEST AND REFINE THE PIPELINE.
