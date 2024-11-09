@@ -1,6 +1,6 @@
 # Secure a CICD Pipeline
 *Steps*:
-     1. Set up a basic CI/CD pipeline using Jenkins or GitLab CI.
+     1. Set up a CI/CD pipeline using Jenkins or GitLab CI.
      2. Integrate static application security testing (SAST) with tools like SonarQube.
      3. Add dynamic application security testing (DAST) using OWASP ZAP.
      4. Implement container image scanning (e.g., Trivy) to scan for vulnerabilities.
@@ -9,7 +9,7 @@
 
 Here's a step-by-step guide for setting up a secure CI/CD pipeline with an emphasis on real-world security practices:
 
-#1. Set Up a Basic CI/CD Pipeline
+#1. Set Up a CI/CD Pipeline
    - *Goal*: Establish a continuous integration and deployment process to automatically build, test, and deploy code securely.
    Steps:
    - Choose a CI/CD Tool: Install and configure Jenkins, GitLab CI, or another CI/CD tool of my choice.
